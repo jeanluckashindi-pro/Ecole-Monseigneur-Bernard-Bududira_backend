@@ -157,7 +157,7 @@ class ActivityLog(models.Model):
 
 
 class Media(models.Model):
-    image = models.ImageField(upload_to="images/")
+    image = models.ImageField(upload_to="school/images/")
     alt_text = models.CharField(max_length=200, blank=True, default="")
     created_at = models.DateTimeField(auto_now_add=True)
 
