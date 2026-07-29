@@ -1,0 +1,19 @@
+﻿services:
+  ecole-backend:
+    build: .
+    image: ecole-backend:latest
+    container_name: ecole-backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "\:8000"
+    volumes:
+      - ecole_media:/app/media
+      - ecole_static:/app/staticfiles
+
+volumes:
+  ecole_media:
+  ecole_static:
