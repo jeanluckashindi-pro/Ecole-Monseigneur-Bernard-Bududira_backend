@@ -156,6 +156,19 @@ class ActivityLog(models.Model):
         return f"[{self.action}] {self.description[:50]}"
 
 
+class Media(models.Model):
+    image = models.ImageField(upload_to="images/")
+    alt_text = models.CharField(max_length=200, blank=True, default="")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'col"."media'
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.image.name
+
+
 class SchoolConfig(models.Model):
     key = models.CharField(max_length=100, unique=True)
     value = models.JSONField()

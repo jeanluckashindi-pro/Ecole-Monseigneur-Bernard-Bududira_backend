@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Inscription, Student, Teacher, Message, ActivityLog, SchoolConfig
+from .models import Inscription, Student, Teacher, Message, ActivityLog, SchoolConfig, Media
 
 
 class InscriptionSerializer(serializers.ModelSerializer):
@@ -41,6 +41,21 @@ class MessageCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = ["name", "email", "phone", "subject", "body"]
+
+
+class MediaSerializer(serializers.ModelSerializer):
+    url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Media
+        fields = ["id", "image", "url", "alt_text", "created_at"]
+        read_only_fields = ["created_at"]
+
+    def get_url(self, obj):
+        request = self.context.get("request")
+        if request:
+            return request.build_absolute_uri(obj.image.url)
+        return obj.image.url
 
 
 class ActivityLogSerializer(serializers.ModelSerializer):

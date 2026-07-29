@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Inscription, Student, Teacher, Message, ActivityLog, SchoolConfig
+from .models import Inscription, Student, Teacher, Message, ActivityLog, SchoolConfig, Media
 
 
 @admin.register(Inscription)
@@ -36,6 +36,12 @@ class ActivityLogAdmin(admin.ModelAdmin):
     list_display = ["action", "description", "created_at"]
     list_filter = ["action"]
     readonly_fields = ["action", "description", "created_at"]
+
+
+@admin.register(Media)
+class MediaAdmin(admin.ModelAdmin):
+    list_display = ["image", "alt_text", "created_at"]
+    search_fields = ["alt_text"]
 
 
 @admin.register(SchoolConfig)

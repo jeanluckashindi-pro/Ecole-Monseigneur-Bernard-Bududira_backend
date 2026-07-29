@@ -3,12 +3,12 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from .models import Inscription, Student, Teacher, Message, ActivityLog, SchoolConfig
+from .models import Inscription, Student, Teacher, Message, ActivityLog, SchoolConfig, Media
 from .serializers import (
     InscriptionSerializer, InscriptionListSerializer,
     StudentSerializer, TeacherSerializer,
     MessageSerializer, MessageCreateSerializer,
-    ActivityLogSerializer, SchoolConfigSerializer,
+    ActivityLogSerializer, SchoolConfigSerializer, MediaSerializer,
 )
 
 
@@ -95,6 +95,31 @@ class MessageViewSet(viewsets.ModelViewSet):
         message.is_read = True
         message.save()
         return Response({"status": "lu"})
+
+
+class MediaViewSet(viewsets.ModelViewSet):
+    queryset = Media.objects.all()
+    serializer_class = MediaSerializer
+
+    def get_permissions(self):
+        if self.action in ("list", "retrieve"):
+            return [AllowAny()]
+        return [IsAuthenticated()]
+
+    def perform_create(self, serializer):
+        media = serializer.save()
+        ActivityLog.objects.create(
+            action="system",
+            description=f"Image ajoutee: {media.image.name}"
+        )
+
+    def perform_destroy(self, instance):
+        ActivityLog.objects.create(
+            action="system",
+            description=f"Image supprimee: {instance.image.name}"
+        )
+        instance.image.delete(save=False)
+        instance.delete()
 
 
 class ActivityLogViewSet(viewsets.ReadOnlyModelViewSet):
