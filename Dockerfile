@@ -15,9 +15,9 @@ RUN pip install --upgrade pip \
     && pip install -r requirements.txt
 
 COPY . .
-RUN chmod +x /app/scripts/docker-entrypoint.sh
 
 EXPOSE 8000
 
-ENTRYPOINT ["/app/scripts/docker-entrypoint.sh"]
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD python manage.py migrate --noinput && \
+    python manage.py collectstatic --noinput && \
+    exec gunicorn config.wsgi:application --bind 0.0.0.0:8000
