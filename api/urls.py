@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from . import views
 
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register(r"inscriptions", views.InscriptionViewSet)
 router.register(r"students", views.StudentViewSet)
 router.register(r"teachers", views.TeacherViewSet)
